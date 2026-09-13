@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truth or Dare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Truth Side (Left/Blue) */
+        .truth-side {
+            flex: 1;
+            background: linear-gradient(135deg, #005cbf, #1e90ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .truth-side:hover {
+            filter: brightness(1.1);
+        }
+
+        .truth-text {
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+            transform: rotate(-45deg);
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Dare Side (Right/Pink) */
+        .dare-side {
+            flex: 1;
+            background: linear-gradient(135deg, #e60073, #ff1493);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dare-side:hover {
+            filter: brightness(1.1);
+        }
+
+        .dare-text {
+            color: white;
+            font-size: 4rem;
+            font-weight: bold;
+            transform: rotate(-45deg);
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .center-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background-color: #1a237e;
+            color: white;
+            padding: 8px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 10;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
+
+        .player-header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #ffeb3b;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 20;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        #question-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 30;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #222;
+            color: #fff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 2px solid #ff4d4d;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            font-size: 2rem;
+            color: #ff4d4d;
+        }
+
+        .modal-content p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .next-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .next-btn:hover {
+            background: #e68a00;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .truth-text, .dare-text {
+                font-size: 2.5rem;
+            }
+            .player-header {
+                font-size: 1.2rem;
+                padding: 8px 15px;
+            }
+        }
+
+        /* Mobile responsive styling for third.html */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .truth-text, .dare-text {
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+    }
+
+    .player-header {
+        font-size: 1.1rem;
+        padding: 8px 18px;
+        top: 15px;
+        width: 85%;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .center-badge {
+        padding: 6px 18px;
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        padding: 20px;
+        width: 95%;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .modal-content p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .next-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .truth-text, .dare-text {
+        font-size: 2rem;
+    }
+
+    .player-header {
+        font-size: 1rem;
+        padding: 6px 12px;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="player-header" id="player-turn-text">Player's Turn</div>
+
+    <div class="container">
+        <div class="truth-side" id="truth-btn">
+            <span class="truth-text">truth</span>
+        </div>
+
+        <!-- Center Divider Text -->
+        <div class="center-badge">or</div>
+
+        <!-- Dare Side -->
+        <div class="dare-side" id="dare-btn">
+            <span class="dare-text">dare</span>
+        </div>
+    </div>
+
+    <div id="question-modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Truth</h2>
+            <p id="modal-question">यहाँ प्रश्न देखिनेछ...</p>
+            <button class="next-btn" id="next-player-btn">Next Player ➡️</button>
+        </div>
+    </div>
+
+<script src="third.js"></script>
+</body>
+</html>
